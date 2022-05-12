@@ -57,17 +57,17 @@ int PPS(struct node* start, int currentTime)
 
 
     // Aging 
-    // ptr = start;
-    // while (ptr != NULL) {
-    //     if (ptr -> state == RUNNABLE && ptr->arriveTime < currentTime)
-    //     {
-    //         ptr->waitTime ++;
-    //         printf("   P[%d]   %.1f ----> ", ptr-> p, ptr->new_priority);
-    //         ptr->new_priority = Aging(0.5, ptr->waitTime, ptr->priority);
-    //         printf(" %.1f", ptr->new_priority);
-    //     }
-    //     ptr = ptr->next;
-    // }
+    ptr = start;
+    while (ptr != NULL) {
+        if (ptr -> state == RUNNABLE && ptr->arriveTime < currentTime)
+        {
+            ptr->waitTime ++;
+            printf("   P[%d]   %.1f ----> ", ptr-> p, ptr->new_priority);
+            ptr->new_priority = Aging(0.5, ptr->waitTime, ptr->priority);
+            printf(" %.1f", ptr->new_priority);
+        }
+        ptr = ptr->next;
+    }
 
     float tmp_priority = 0;
     int highest = 0;
@@ -115,7 +115,7 @@ int PPS(struct node* start, int currentTime)
                 ptr->state = TERMINATED;
                 ptr->completeTime = currentTime;
                 ptr->taTime = ptr->completeTime - ptr->arriveTime;
-                ptr->waitTime = ptr->taTime -  ptr->burstTime;
+                ptr->waitTime = ptr->taTime - ptr->burstTime;
                 break;
             }
             else if (highest_priority > ptr->new_priority && highest_state == RUNNABLE)
@@ -145,7 +145,7 @@ int PPS(struct node* start, int currentTime)
     {
         temp_ptr = start;
         while (temp_ptr != NULL) {
-            if (temp_ptr -> p == highest)
+            if (temp_ptr -> p == highest && temp_ptr->cpuDoneTime < temp_ptr->burstTime)
             {
                 temp_ptr -> state = RUNNING;
                 temp_ptr -> cpuDoneTime ++;
